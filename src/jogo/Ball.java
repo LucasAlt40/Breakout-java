@@ -6,6 +6,7 @@ public class Ball extends Sprite {
 
     private int xdir;
     private int ydir;
+    private int velocidadeBolinha = 2;
 
     public Ball() {
 
@@ -13,13 +14,17 @@ public class Ball extends Sprite {
     }
 
     private void initBall() {
-        
+
         xdir = 1;
         ydir = -1;
 
         loadImage();
         getImageDimensions();
         resetState();
+    }
+
+    public void updateVelocidadeBolinha(int velocidadeBolinha){
+        this.velocidadeBolinha = velocidadeBolinha;
     }
 
     private void loadImage() {
@@ -32,17 +37,16 @@ public class Ball extends Sprite {
         this.setPositionX(this.getPositionX() + xdir);
         this.setPositionY(this.getPositionY() + ydir);
 
-
         if (this.getPositionX() <= 0) {
-            setXDir(Commons.velocidadeBolinha);
+            setXDir(velocidadeBolinha);
         }
 
         if (this.getPositionX() >= Commons.WIDTH - this.getImageWidth()) {
-            setXDir(-Commons.velocidadeBolinha);
+            setXDir(-velocidadeBolinha);
         }
 
         if (this.getPositionY() <= 0) {
-            setYDir(Commons.velocidadeBolinha);
+            setYDir(velocidadeBolinha);
         }
     }
 

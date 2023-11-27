@@ -23,6 +23,8 @@ public class Board extends JPanel implements Commons {
     private Image backgroundImage;
     private Clip backgroundMusic;
     private Clip colisionAudio;
+    private int velocidadeBolinha = 1;
+    private int blocosDestruidos = 0;
 
     public Board() {
         initBoard();
@@ -93,6 +95,7 @@ public class Board extends JPanel implements Commons {
         bricks = new Brick[N_OF_BRICKS];
 
         ball = new Ball();
+        ball.updateVelocidadeBolinha(velocidadeBolinha);
         paddle = new Paddle();
 
         int k = 0;
@@ -221,32 +224,32 @@ public class Board extends JPanel implements Commons {
 
             if (ballLPos < first) {
 
-                ball.setXDir(-Commons.velocidadeBolinha);
-                ball.setYDir(-Commons.velocidadeBolinha);
+                ball.setXDir(-velocidadeBolinha);
+                ball.setYDir(-velocidadeBolinha);
             }
 
             if (ballLPos >= first && ballLPos < second) {
 
-                ball.setXDir(-Commons.velocidadeBolinha);
-                ball.setYDir(-Commons.velocidadeBolinha * ball.getYDir());
+                ball.setXDir(-velocidadeBolinha);
+                ball.setYDir(-velocidadeBolinha * ball.getYDir());
             }
 
             if (ballLPos >= second && ballLPos < third) {
 
                 ball.setXDir(0);
-                ball.setYDir(-Commons.velocidadeBolinha);
+                ball.setYDir(-velocidadeBolinha);
             }
 
             if (ballLPos >= third && ballLPos < fourth) {
 
-                ball.setXDir(Commons.velocidadeBolinha);
-                ball.setYDir(-Commons.velocidadeBolinha * ball.getYDir());
+                ball.setXDir(velocidadeBolinha);
+                ball.setYDir(-velocidadeBolinha * ball.getYDir());
             }
 
             if (ballLPos > fourth) {
 
-                ball.setXDir(Commons.velocidadeBolinha);
-                ball.setYDir(-Commons.velocidadeBolinha);
+                ball.setXDir(velocidadeBolinha);
+                ball.setYDir(-velocidadeBolinha);
             }
         }
 
@@ -269,21 +272,29 @@ public class Board extends JPanel implements Commons {
 
                     if (bricks[i].getRect().contains(pointRight)) {
 
-                        ball.setXDir(-Commons.velocidadeBolinha);
+                        ball.setXDir(-velocidadeBolinha);
                     } else if (bricks[i].getRect().contains(pointLeft)) {
 
-                        ball.setXDir(Commons.velocidadeBolinha);
+                        ball.setXDir(velocidadeBolinha);
                     }
 
                     if (bricks[i].getRect().contains(pointTop)) {
 
-                        ball.setYDir(Commons.velocidadeBolinha);
+                        ball.setYDir(velocidadeBolinha);
                     } else if (bricks[i].getRect().contains(pointBottom)) {
 
-                        ball.setYDir(-Commons.velocidadeBolinha);
+                        ball.setYDir(-velocidadeBolinha);
                     }
 
                     bricks[i].setDestroyed(true);
+                    blocosDestruidos++;
+                }
+
+                if(blocosDestruidos == 4) {
+                    velocidadeBolinha++;
+                    System.out.println("Velocidade da bolinha: " + velocidadeBolinha);
+                    ball.updateVelocidadeBolinha(velocidadeBolinha);
+                    blocosDestruidos = 0;
                 }
             }
         }

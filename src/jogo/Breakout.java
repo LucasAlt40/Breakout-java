@@ -41,7 +41,7 @@ public class Breakout extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             Breakout game = new Breakout();
-            game.initUI(); // Inicia a interface do usuário
+            game.initUI();
         });
     }
 }
