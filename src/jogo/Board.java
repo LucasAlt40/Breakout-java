@@ -35,6 +35,30 @@ public class Board extends JPanel implements Commons {
         loadAudioColision();
     }
 
+    private void loadGameOverMusic() {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("src/resources/gameover.wav"));
+            backgroundMusic = AudioSystem.getClip();
+            backgroundMusic.open(audioInputStream);
+            backgroundMusic.loop(0);
+            adjustBackgroundVolume(50.0f);
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadVictoryMusic() {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("src/resources/victory.wav"));
+            backgroundMusic = AudioSystem.getClip();
+            backgroundMusic.open(audioInputStream);
+            backgroundMusic.loop(0); // Toca uma vez
+            adjustBackgroundVolume(50.0f); // Definindo o volume para 50%
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void adjustCollisionVolume(float volume) {
         if (colisionAudio != null && colisionAudio.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             FloatControl gainControl = (FloatControl) colisionAudio.getControl(FloatControl.Type.MASTER_GAIN);
@@ -152,12 +176,23 @@ public class Board extends JPanel implements Commons {
     }
 
     private void gameFinished(Graphics2D g2d) {
-        var font = new Font("Verdana", Font.BOLD, 18);
+        var font = new Font("Verdana", Font.BOLD, 42);
         FontMetrics fontMetrics = this.getFontMetrics(font);
 
-        g2d.setColor(Color.BLACK);
+        g2d.setColor(Color.WHITE);
         g2d.setFont(font);
-        g2d.drawString(message, (Commons.WIDTH - fontMetrics.stringWidth(message)) / 2, Commons.WIDTH / 2);
+        g2d.drawString(message, (Commons.WIDTH - fontMetrics.stringWidth(message)) / 2, Commons.HEIGHT - 200);
+        if (message.equals("Game Over")) {
+            if (backgroundMusic != null) {
+                backgroundMusic.stop();
+            }
+            loadGameOverMusic();
+        } else {
+            if (backgroundMusic != null) {
+                backgroundMusic.stop();
+            }
+            loadVictoryMusic();
+        }
     }
 
     private class TAdapter extends KeyAdapter {
