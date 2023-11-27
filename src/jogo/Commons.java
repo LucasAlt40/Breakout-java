@@ -15,5 +15,5 @@ public interface Commons {
     int INIT_BALL_Y = 355;    
     int PERIOD = 1;
     int velocidadePaddle = 5;
-    int velocidadeBolinha = 5;
+    int velocidadeBolinha = 2;
 }

@@ -1,2 +1,3 @@
-*./ideia
+.ideia/
 /out
+*.iml

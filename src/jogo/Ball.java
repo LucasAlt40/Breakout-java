@@ -35,16 +35,16 @@ public class Ball extends Sprite {
 
         if (this.getPositionX() == 0) {
 
-            setXDir(1);
+            setXDir(Commons.velocidadeBolinha);
         }
 
         if (this.getPositionX() == Commons.WIDTH - this.getImageWidth()) {
-            setXDir(-1);
+            setXDir(-Commons.velocidadeBolinha);
         }
 
         if (this.getPositionY() == 0) {
 
-            setYDir(1);
+            setYDir(Commons.velocidadeBolinha);
         }
     }
 

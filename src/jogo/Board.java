@@ -221,32 +221,32 @@ public class Board extends JPanel implements Commons {
 
             if (ballLPos < first) {
 
-                ball.setXDir(-1);
-                ball.setYDir(-1);
+                ball.setXDir(-Commons.velocidadeBolinha);
+                ball.setYDir(-Commons.velocidadeBolinha);
             }
 
             if (ballLPos >= first && ballLPos < second) {
 
-                ball.setXDir(-1);
-                ball.setYDir(-1 * ball.getYDir());
+                ball.setXDir(-Commons.velocidadeBolinha);
+                ball.setYDir(-Commons.velocidadeBolinha * ball.getYDir());
             }
 
             if (ballLPos >= second && ballLPos < third) {
 
                 ball.setXDir(0);
-                ball.setYDir(-1);
+                ball.setYDir(-Commons.velocidadeBolinha);
             }
 
             if (ballLPos >= third && ballLPos < fourth) {
 
-                ball.setXDir(1);
-                ball.setYDir(-1 * ball.getYDir());
+                ball.setXDir(Commons.velocidadeBolinha);
+                ball.setYDir(-Commons.velocidadeBolinha * ball.getYDir());
             }
 
             if (ballLPos > fourth) {
 
-                ball.setXDir(1);
-                ball.setYDir(-1);
+                ball.setXDir(Commons.velocidadeBolinha);
+                ball.setYDir(-Commons.velocidadeBolinha);
             }
         }
 
@@ -269,18 +269,18 @@ public class Board extends JPanel implements Commons {
 
                     if (bricks[i].getRect().contains(pointRight)) {
 
-                        ball.setXDir(-1);
+                        ball.setXDir(-Commons.velocidadeBolinha);
                     } else if (bricks[i].getRect().contains(pointLeft)) {
 
-                        ball.setXDir(1);
+                        ball.setXDir(Commons.velocidadeBolinha);
                     }
 
                     if (bricks[i].getRect().contains(pointTop)) {
 
-                        ball.setYDir(1);
+                        ball.setYDir(Commons.velocidadeBolinha);
                     } else if (bricks[i].getRect().contains(pointBottom)) {
 
-                        ball.setYDir(-1);
+                        ball.setYDir(-Commons.velocidadeBolinha);
                     }
 
                     bricks[i].setDestroyed(true);
