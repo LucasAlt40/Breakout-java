@@ -29,24 +29,23 @@ public class Ball extends Sprite {
     }
 
     public void move() {
+        this.setPositionX(this.getPositionX() + xdir);
+        this.setPositionY(this.getPositionY() + ydir);
 
-        this.setPositionX( this.getPositionX() + xdir);
-        this.setPositionY( this.getPositionY() + ydir);
 
-        if (this.getPositionX() == 0) {
-
+        if (this.getPositionX() <= 0) {
             setXDir(Commons.velocidadeBolinha);
         }
 
-        if (this.getPositionX() == Commons.WIDTH - this.getImageWidth()) {
+        if (this.getPositionX() >= Commons.WIDTH - this.getImageWidth()) {
             setXDir(-Commons.velocidadeBolinha);
         }
 
-        if (this.getPositionY() == 0) {
-
+        if (this.getPositionY() <= 0) {
             setYDir(Commons.velocidadeBolinha);
         }
     }
+
 
     private void resetState() {
 
