@@ -363,8 +363,13 @@ public class Board extends JPanel implements Commons {
                     System.out.println("Velocidade da bolinha: " + velocidadeBolinha);
                     ball.updateVelocidadeBolinha(velocidadeBolinha);
                     blocosDestruidos = 0;
-                    twoBalls = true;
+                    
+                    
 
+                }
+                if (gerador.nextInt(60)+ 1 == blocosDestruidos) {
+                    
+                    twoBalls = true;
                 }
 
             }
