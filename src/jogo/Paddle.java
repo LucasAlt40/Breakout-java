@@ -16,14 +16,10 @@ public class Paddle extends Sprite {
         resetState();
     }
 
-    private void loadImage() {
-        var ii = new ImageIcon("src/resources/testinho-2.png");
-        setImageObject(ii.getImage());
-    }
-
-    void move() {
+    
+    public void move() {
         setPositionX(getPositionX() + dx);
-
+        
         if (getPositionX() <= 0) {
             setPositionX(0);
         }
@@ -52,7 +48,11 @@ public class Paddle extends Sprite {
             dx = 0;
         }
     }
-
+    private void loadImage() {
+        var ii = new ImageIcon("src/resources/testinho-2.png");
+        setImageObject(ii.getImage());
+    }
+    
     private void resetState() {
         setPositionX(Commons.INIT_PADDLE_X);
         setPositionY(Commons.INIT_PADDLE_Y);

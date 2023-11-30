@@ -13,9 +13,10 @@ public interface Commons {
     int INIT_PADDLE_Y = HEIGHT - 45;
     int INIT_BALL_X = WIDTH / 2;
     int INIT_BALL_Y = 355;    
-    int PERIOD = 5;
+    int PERIOD = 10;
     int velocidadePaddle = 5;
-    int velocidadeBolinhaMax = 2;
+    
+    int velocidadeBolinhaMax = 4;
 
     int N_OF_BALL = 1;
 
