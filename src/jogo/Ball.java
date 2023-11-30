@@ -8,33 +8,38 @@ public class Ball extends Sprite {
     private int ydir;
     private int velocidadeBolinha = 1;
 
-    public Ball() {
+    public Ball(int N_OF_BALL) {
 
-        initBall();
+        initBall(N_OF_BALL);
     }
 
-    private void initBall() {
+    private void initBall(int N_OF_BALL) {
 
         xdir = 1;
         ydir = -1;
 
-        loadImage();
+        loadImage(N_OF_BALL);
         getImageDimensions();
         resetState();
     }
 
-    public void updateVelocidadeBolinha(int velocidadeBolinha){
-        if(this.velocidadeBolinha < 2){
+    public void updateVelocidadeBolinha(int velocidadeBolinha) {
+        if (this.velocidadeBolinha < Commons.velocidadeBolinhaMax) {
             this.velocidadeBolinha = velocidadeBolinha;
 
         }
-        
-    }
-    
-    private void loadImage() {
 
-        var ii = new ImageIcon("src/resources/ball.png");
-        this.setImageObject(ii.getImage());
+    }
+
+    private void loadImage(int N_OF_BALL) {
+        if (N_OF_BALL == 1) {
+            var ii = new ImageIcon("src/resources/ball.png");
+            this.setImageObject(ii.getImage());
+        } else {
+            var ii = new ImageIcon("src/resources/ball 2.png");
+            this.setImageObject(ii.getImage());
+
+        }
     }
 
     public void move() {
@@ -53,7 +58,6 @@ public class Ball extends Sprite {
             setYDir(velocidadeBolinha);
         }
     }
-
 
     private void resetState() {
 
@@ -75,4 +79,5 @@ public class Ball extends Sprite {
 
         return ydir;
     }
+
 }

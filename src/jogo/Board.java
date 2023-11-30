@@ -11,20 +11,24 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 public class Board extends JPanel implements Commons {
 
     private Timer timer;
     private String message = "Game Over";
     private Ball ball;
+    private Ball ball2;
     private Paddle paddle;
     private Brick[] bricks;
     private boolean inGame = true;
+    private boolean twoBalls = false;
     private Image backgroundImage;
     private Clip backgroundMusic;
     private Clip colisionAudio;
     private int velocidadeBolinha = 1;
     private int blocosDestruidos = 0;
+    private Random gerador = new Random();
 
     public Board() {
         initBoard();
@@ -115,7 +119,11 @@ public class Board extends JPanel implements Commons {
 
     private void initBoard() {
         bricks = new Brick[N_OF_BRICKS];
-        ball = new Ball();
+        ball = new Ball(N_OF_BALL);
+        // Instanciamente Bola 2
+
+        ball2 = new Ball(N_OF_BALL + 1);
+
         ball.updateVelocidadeBolinha(velocidadeBolinha);
         paddle = new Paddle();
 
@@ -161,12 +169,14 @@ public class Board extends JPanel implements Commons {
 
         g2d.drawImage(ball.getImageObject(), ball.getPositionX(), ball.getPositionY(),
                 ball.getImageWidth(), ball.getImageHeight(), this);
+        // Representação visual da bola 2
+        if (twoBalls) {
+            g2d.drawImage(ball2.getImageObject(), ball2.getPositionX(), ball2.getPositionY(),
+                    ball2.getImageWidth(), ball2.getImageHeight(), this);
+
+        }
 
         g2d.drawImage(paddle.getImageObject(), paddle.getPositionX(), paddle.getPositionY(),
-                paddle.getImageWidth(), paddle.getImageHeight(), this);
-
-        g2d.drawImage(paddle.getImageObject(), paddle.getPositionX(),
-                paddle.getPositionY(),
                 paddle.getImageWidth(), paddle.getImageHeight(), this);
 
         for (int i = 0; i < N_OF_BRICKS; i++) {
@@ -190,11 +200,13 @@ public class Board extends JPanel implements Commons {
                 backgroundMusic.stop();
             }
             loadGameOverMusic();
+
         } else {
             if (backgroundMusic != null) {
                 backgroundMusic.stop();
             }
             loadVictoryMusic();
+
         }
     }
 
@@ -220,7 +232,12 @@ public class Board extends JPanel implements Commons {
     private void doGameCycle() {
         ball.move();
         paddle.move();
-        checkCollision();
+        checkCollision(ball);
+        // Colisão da bola 2
+        if (twoBalls && ball2 != null) {
+            checkCollision(ball2);
+            ball2.move();
+        }
         repaint();
     }
 
@@ -229,11 +246,16 @@ public class Board extends JPanel implements Commons {
         timer.stop();
     }
 
-    private void checkCollision() {
+    private void checkCollision(Ball ball) {
 
-        if (ball.getRect().getMaxY() > BOTTOM_EDGE) {
-
-            stopGame();
+        if (this.ball.getRect().getMaxY() > BOTTOM_EDGE) {
+            inGame = false;
+            timer.stop();
+            message = "Game Over";
+            if (backgroundMusic != null) {
+                backgroundMusic.stop();
+            }
+            loadGameOverMusic();
         }
 
         for (int i = 0, j = 0; i < N_OF_BRICKS; i++) {
@@ -255,39 +277,44 @@ public class Board extends JPanel implements Commons {
             int paddleLPos = (int) paddle.getRect().getMinX();
             int ballLPos = (int) ball.getRect().getMinX();
 
-            int first = paddleLPos + 16;
-            int second = paddleLPos + 24;
-            int third = paddleLPos + 32;
-            int fourth = paddleLPos + 40;
+            int first = paddleLPos + 8;
+            int second = paddleLPos + 16;
+            int third = paddleLPos + 24;
+            int fourth = paddleLPos + 32;
 
             if (ballLPos < first) {
 
                 ball.setXDir(-velocidadeBolinha);
                 ball.setYDir(-velocidadeBolinha);
+
             }
 
             if (ballLPos >= first && ballLPos < second) {
 
                 ball.setXDir(-velocidadeBolinha);
                 ball.setYDir(-velocidadeBolinha * ball.getYDir());
+
             }
 
             if (ballLPos >= second && ballLPos < third) {
 
                 ball.setXDir(0);
                 ball.setYDir(-velocidadeBolinha);
+
             }
 
             if (ballLPos >= third && ballLPos < fourth) {
 
                 ball.setXDir(velocidadeBolinha);
                 ball.setYDir(-velocidadeBolinha * ball.getYDir());
+
             }
 
             if (ballLPos > fourth) {
 
                 ball.setXDir(velocidadeBolinha);
                 ball.setYDir(-velocidadeBolinha);
+
             }
         }
 
@@ -330,14 +357,19 @@ public class Board extends JPanel implements Commons {
 
                 if (blocosDestruidos == 4) {
 
-                    if(velocidadeBolinha < 2){
+                    if (velocidadeBolinha < velocidadeBolinhaMax) {
                         velocidadeBolinha++;
                     }
                     System.out.println("Velocidade da bolinha: " + velocidadeBolinha);
                     ball.updateVelocidadeBolinha(velocidadeBolinha);
                     blocosDestruidos = 0;
+                    twoBalls = true;
+
                 }
+
             }
         }
+
     }
+
 }

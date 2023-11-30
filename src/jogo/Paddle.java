@@ -17,7 +17,7 @@ public class Paddle extends Sprite {
     }
 
     private void loadImage() {
-        var ii = new ImageIcon("src/resources/paddle.png");
+        var ii = new ImageIcon("src/resources/testinho-2.png");
         setImageObject(ii.getImage());
     }
 
