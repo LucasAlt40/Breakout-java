@@ -85,7 +85,6 @@ public class Board extends JPanel implements Commons {
         }
     }
 
-
     private void adjustBackgroundVolume(float volume) {
         if (backgroundMusic != null && backgroundMusic.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             FloatControl gainControl = (FloatControl) backgroundMusic.getControl(FloatControl.Type.MASTER_GAIN);
@@ -114,10 +113,8 @@ public class Board extends JPanel implements Commons {
         }
     }
 
-
     private void initBoard() {
         bricks = new Brick[N_OF_BRICKS];
-
         ball = new Ball();
         ball.updateVelocidadeBolinha(velocidadeBolinha);
         paddle = new Paddle();
@@ -126,7 +123,7 @@ public class Board extends JPanel implements Commons {
 
         for (int i = 0; i < N_OF_ROWS; i++) {
             for (int j = 0; j < N_OF_COLUMNS; j++) {
-                bricks[k] = new Brick(j * 50 + 30 , i * 21 + 50);
+                bricks[k] = new Brick(j * 50 + 30, i * 21 + 50);
                 k++;
             }
         }
@@ -161,9 +158,15 @@ public class Board extends JPanel implements Commons {
     }
 
     private void drawObjects(Graphics2D g2d) {
+
         g2d.drawImage(ball.getImageObject(), ball.getPositionX(), ball.getPositionY(),
                 ball.getImageWidth(), ball.getImageHeight(), this);
+
         g2d.drawImage(paddle.getImageObject(), paddle.getPositionX(), paddle.getPositionY(),
+                paddle.getImageWidth(), paddle.getImageHeight(), this);
+
+        g2d.drawImage(paddle.getImageObject(), paddle.getPositionX(),
+                paddle.getPositionY(),
                 paddle.getImageWidth(), paddle.getImageHeight(), this);
 
         for (int i = 0; i < N_OF_BRICKS; i++) {
@@ -252,10 +255,10 @@ public class Board extends JPanel implements Commons {
             int paddleLPos = (int) paddle.getRect().getMinX();
             int ballLPos = (int) ball.getRect().getMinX();
 
-            int first = paddleLPos + 8;
-            int second = paddleLPos + 16;
-            int third = paddleLPos + 24;
-            int fourth = paddleLPos + 32;
+            int first = paddleLPos + 16;
+            int second = paddleLPos + 24;
+            int third = paddleLPos + 32;
+            int fourth = paddleLPos + 40;
 
             if (ballLPos < first) {
 
@@ -325,8 +328,11 @@ public class Board extends JPanel implements Commons {
                     blocosDestruidos++;
                 }
 
-                if(blocosDestruidos == 4) {
-                    velocidadeBolinha++;
+                if (blocosDestruidos == 4) {
+
+                    if(velocidadeBolinha < 2){
+                        velocidadeBolinha++;
+                    }
                     System.out.println("Velocidade da bolinha: " + velocidadeBolinha);
                     ball.updateVelocidadeBolinha(velocidadeBolinha);
                     blocosDestruidos = 0;

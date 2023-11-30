@@ -6,7 +6,7 @@ public class Ball extends Sprite {
 
     private int xdir;
     private int ydir;
-    private int velocidadeBolinha = 2;
+    private int velocidadeBolinha = 1;
 
     public Ball() {
 
@@ -24,9 +24,13 @@ public class Ball extends Sprite {
     }
 
     public void updateVelocidadeBolinha(int velocidadeBolinha){
-        this.velocidadeBolinha = velocidadeBolinha;
-    }
+        if(this.velocidadeBolinha < 2){
+            this.velocidadeBolinha = velocidadeBolinha;
 
+        }
+        
+    }
+    
     private void loadImage() {
 
         var ii = new ImageIcon("src/resources/ball.png");
