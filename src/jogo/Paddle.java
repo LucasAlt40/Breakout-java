@@ -5,21 +5,26 @@ import java.awt.event.KeyEvent;
 
 public class Paddle extends Sprite {
     private int dx;
+    private int velocidadePaddle = 3;
 
     public Paddle() {
         initPaddle();
     }
-
+    // Tem que ser chamado o init paddle passando I como argumento
     private void initPaddle() {
-        loadImage();
+        loadImage(1);
         getImageDimensions();
         resetState();
     }
 
-    
+    public void setVelocidadePaddle(int velocidade) {
+        velocidadePaddle = velocidade;
+
+    }
+
     public void move() {
         setPositionX(getPositionX() + dx);
-        
+
         if (getPositionX() <= 0) {
             setPositionX(0);
         }
@@ -31,13 +36,12 @@ public class Paddle extends Sprite {
 
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
-
         if (key == KeyEvent.VK_LEFT) {
-            dx = -Commons.velocidadePaddle;
+            dx = -velocidadePaddle;
         }
 
         if (key == KeyEvent.VK_RIGHT) {
-            dx = Commons.velocidadePaddle;
+            dx = velocidadePaddle;
         }
     }
 
@@ -48,11 +52,17 @@ public class Paddle extends Sprite {
             dx = 0;
         }
     }
-    private void loadImage() {
-        var ii = new ImageIcon("src/resources/testinho-2.png");
+
+    public void loadImage(int i) {
+        if (i == 1) {
+            var ii = new ImageIcon("src/resources/paddle.png");
+        }else{
+            var ii = new ImageIcon("src/resources/testinho-2.png");
+
+        }
         setImageObject(ii.getImage());
     }
-    
+
     private void resetState() {
         setPositionX(Commons.INIT_PADDLE_X);
         setPositionY(Commons.INIT_PADDLE_Y);

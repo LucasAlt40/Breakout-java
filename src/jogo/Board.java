@@ -263,6 +263,7 @@ public class Board extends JPanel implements Commons {
             if (bricks[i].isDestroyed()) {
 
                 j++;
+
             }
 
             if (j == N_OF_BRICKS) {
@@ -353,9 +354,12 @@ public class Board extends JPanel implements Commons {
 
                     bricks[i].setDestroyed(true);
                     blocosDestruidos++;
+                    if (gerador.nextInt(3) + 1 == 1) {
+                        gerarBuffs();
+                    }
                 }
 
-                if (blocosDestruidos == 4) {
+                if (blocosDestruidos == 8) {
 
                     if (velocidadeBolinha < velocidadeBolinhaMax) {
                         velocidadeBolinha++;
@@ -363,16 +367,37 @@ public class Board extends JPanel implements Commons {
                     System.out.println("Velocidade da bolinha: " + velocidadeBolinha);
                     ball.updateVelocidadeBolinha(velocidadeBolinha);
                     blocosDestruidos = 0;
-                    
-                    
 
-                }
-                if (gerador.nextInt(60)+ 1 == blocosDestruidos) {
-                    
-                    twoBalls = true;
                 }
 
             }
+        }
+
+    }
+
+    private void gerarBuffs() {
+
+        switch (gerador.nextInt(4) + 1) {
+            case 1:
+                paddle.setVelocidadePaddle(10);
+                System.out.println("Paddle n° 10");
+                break;
+            case 2:
+                paddle.setVelocidadePaddle(5);
+                System.out.println("Paddle n° 5");
+
+                break;
+            case 3:
+                twoBalls = true;
+                System.out.println("Duas bolas");
+
+                break;
+            case 4:
+                paddle.loadImage(gerador.nextInt(2)+1);
+                break;
+
+            default:
+                break;
         }
 
     }
