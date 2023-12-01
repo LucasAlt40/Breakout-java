@@ -29,8 +29,8 @@ public class Paddle extends Sprite {
             setPositionX(0);
         }
 
-        if (getPositionX() >= Commons.WIDTH - getImageWidth()) {
-            setPositionX(Commons.WIDTH - getImageWidth());
+        if (getPositionX() >= Commons.LARGURA - getImageWidth()) {
+            setPositionX(Commons.LARGURA - getImageWidth());
         }
     }
 
@@ -64,7 +64,7 @@ public class Paddle extends Sprite {
     }
 
     private void resetState() {
-        setPositionX(Commons.INIT_PADDLE_X);
-        setPositionY(Commons.INIT_PADDLE_Y);
+        setPositionX(Commons.INICIAR_PADDLE_X);
+        setPositionY(Commons.INICIAR_PADDLE_Y);
     }
 }

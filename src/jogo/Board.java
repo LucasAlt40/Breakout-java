@@ -118,29 +118,29 @@ public class Board extends JPanel implements Commons {
     }
 
     private void initBoard() {
-        bricks = new Brick[N_OF_BRICKS];
-        ball = new Ball(N_OF_BALL);
+        bricks = new Brick[N_DE_BLOCOS];
+        ball = new Ball(N_DA_BOLA);
         // Instanciamente Bola 2
 
-        ball2 = new Ball(N_OF_BALL + 1);
+        ball2 = new Ball(N_DA_BOLA + 1);
 
         ball.updateVelocidadeBolinha(velocidadeBolinha);
         paddle = new Paddle();
 
         int k = 0;
 
-        for (int i = 0; i < N_OF_ROWS; i++) {
-            for (int j = 0; j < N_OF_COLUMNS; j++) {
+        for (int i = 0; i < N_DE_LINHAS; i++) {
+            for (int j = 0; j < N_DE_COLUNAS; j++) {
                 bricks[k] = new Brick(j * 50 + 30, i * 21 + 50);
                 k++;
             }
         }
 
-        timer = new Timer(PERIOD, new GameCycle());
+        timer = new Timer(VELOCIDADEGERAL, new GameCycle());
         timer.start();
 
         setFocusable(true);
-        setPreferredSize(new Dimension(Commons.WIDTH, Commons.HEIGHT));
+        setPreferredSize(new Dimension(Commons.LARGURA, Commons.ALTURA));
         addKeyListener(new TAdapter());
     }
 
@@ -179,7 +179,7 @@ public class Board extends JPanel implements Commons {
         g2d.drawImage(paddle.getImageObject(), paddle.getPositionX(), paddle.getPositionY(),
                 paddle.getImageWidth(), paddle.getImageHeight(), this);
 
-        for (int i = 0; i < N_OF_BRICKS; i++) {
+        for (int i = 0; i < N_DE_BLOCOS; i++) {
             if (!bricks[i].isDestroyed()) {
                 g2d.drawImage(bricks[i].getImageObject(), bricks[i].getPositionX(),
                         bricks[i].getPositionY(), bricks[i].getImageWidth(),
@@ -194,7 +194,7 @@ public class Board extends JPanel implements Commons {
 
         g2d.setColor(Color.WHITE);
         g2d.setFont(font);
-        g2d.drawString(message, (Commons.WIDTH - fontMetrics.stringWidth(message)) / 2, Commons.HEIGHT - 200);
+        g2d.drawString(message, (Commons.LARGURA - fontMetrics.stringWidth(message)) / 2, Commons.ALTURA - 200);
         if (message.equals("Game Over")) {
             if (backgroundMusic != null) {
                 backgroundMusic.stop();
@@ -248,7 +248,7 @@ public class Board extends JPanel implements Commons {
 
     private void checkCollision(Ball ball) {
 
-        if (this.ball.getRect().getMaxY() > BOTTOM_EDGE) {
+        if (this.ball.getRect().getMaxY() > BORDA_INFERIOR) {
             inGame = false;
             timer.stop();
             message = "Game Over";
@@ -258,7 +258,7 @@ public class Board extends JPanel implements Commons {
             loadGameOverMusic();
         }
 
-        for (int i = 0, j = 0; i < N_OF_BRICKS; i++) {
+        for (int i = 0, j = 0; i < N_DE_BLOCOS; i++) {
 
             if (bricks[i].isDestroyed()) {
 
@@ -266,7 +266,7 @@ public class Board extends JPanel implements Commons {
 
             }
 
-            if (j == N_OF_BRICKS) {
+            if (j == N_DE_BLOCOS) {
 
                 message = "Victory";
                 stopGame();
@@ -319,7 +319,7 @@ public class Board extends JPanel implements Commons {
             }
         }
 
-        for (int i = 0; i < N_OF_BRICKS; i++) {
+        for (int i = 0; i < N_DE_BLOCOS; i++) {
 
             if ((ball.getRect()).intersects(bricks[i].getRect())) {
 
@@ -354,14 +354,12 @@ public class Board extends JPanel implements Commons {
 
                     bricks[i].setDestroyed(true);
                     blocosDestruidos++;
-                    if (gerador.nextInt(3) + 1 == 1) {
-                        gerarBuffs();
-                    }
+                    
                 }
 
                 if (blocosDestruidos == 8) {
 
-                    if (velocidadeBolinha < velocidadeBolinhaMax) {
+                    if (velocidadeBolinha < VELOCIDADEMAXBOLA) {
                         velocidadeBolinha++;
                     }
                     System.out.println("Velocidade da bolinha: " + velocidadeBolinha);
@@ -373,6 +371,12 @@ public class Board extends JPanel implements Commons {
             }
         }
 
+    }
+
+    private void aleatorio(){
+        if (gerador.nextInt(3) + 1 == 1) {
+                        gerarBuffs();
+                    }
     }
 
     private void gerarBuffs() {

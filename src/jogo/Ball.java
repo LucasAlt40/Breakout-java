@@ -8,31 +8,31 @@ public class Ball extends Sprite {
     private int ydir;
     private int velocidadeBolinha = 1;
 
-    public Ball(int N_OF_BALL) {
+    public Ball(int N_DA_BOLA) {
 
-        initBall(N_OF_BALL);
+        initBall(N_DA_BOLA);
     }
 
-    private void initBall(int N_OF_BALL) {
+    private void initBall(int N_DA_BOLA) {
 
         xdir = 1;
         ydir = -1;
 
-        loadImage(N_OF_BALL);
+        loadImage(N_DA_BOLA);
         getImageDimensions();
         resetState();
     }
 
     public void updateVelocidadeBolinha(int velocidadeBolinha) {
-        if (this.velocidadeBolinha < Commons.velocidadeBolinhaMax) {
+        if (this.velocidadeBolinha < Commons.VELOCIDADEMAXBOLA) {
             this.velocidadeBolinha = velocidadeBolinha;
 
         }
 
     }
 
-    private void loadImage(int N_OF_BALL) {
-        if (N_OF_BALL == 1) {
+    private void loadImage(int N_DA_BOLA) {
+        if (N_DA_BOLA == 1) {
             var ii = new ImageIcon("src/resources/ball.png");
             this.setImageObject(ii.getImage());
         } else {
@@ -50,7 +50,7 @@ public class Ball extends Sprite {
             setXDir(velocidadeBolinha);
         }
 
-        if (this.getPositionX() >= Commons.WIDTH - this.getImageWidth()) {
+        if (this.getPositionX() >= Commons.LARGURA - this.getImageWidth()) {
             setXDir(-velocidadeBolinha);
         }
 
@@ -61,8 +61,8 @@ public class Ball extends Sprite {
 
     private void resetState() {
 
-        this.setPositionX(Commons.INIT_BALL_X);
-        this.setPositionY(Commons.INIT_BALL_Y);
+        this.setPositionX(Commons.INICIAR_BOLA_X);
+        this.setPositionY(Commons.INICIAR_BOLA_Y);
     }
 
     public void setXDir(int x) {

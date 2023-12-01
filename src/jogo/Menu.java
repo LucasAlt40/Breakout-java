@@ -13,7 +13,7 @@ public class Menu extends JPanel implements KeyListener {
     public Menu(JFrame frame) {
         this.frame = frame;
         setFocusable(true);
-        setPreferredSize(new Dimension(Commons.WIDTH, Commons.HEIGHT));
+        setPreferredSize(new Dimension(Commons.LARGURA, Commons.ALTURA));
         setBackground(Color.BLACK);
         addKeyListener(this);
     }
@@ -28,7 +28,7 @@ public class Menu extends JPanel implements KeyListener {
         String message = "Pressione qualquer tecla para iniciar";
         FontMetrics fontMetrics = g.getFontMetrics();
         int stringWidth = fontMetrics.stringWidth(message);
-        g2d.drawString(message, (Commons.WIDTH - stringWidth) / 2, Commons.HEIGHT / 2);
+        g2d.drawString(message, (Commons.LARGURA - stringWidth) / 2, Commons.ALTURA / 2);
     }
 
     public boolean isGameStarted() {
