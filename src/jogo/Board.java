@@ -381,21 +381,25 @@ public class Board extends JPanel implements Commons {
 
     private void gerarBuffs() {
 
+
         switch (gerador.nextInt(4) + 1) {
             case 1:
                 paddle.setVelocidadePaddle(10);
-                System.out.println("Paddle n° 10");
+
                 break;
             case 2:
                 paddle.setVelocidadePaddle(5);
-                System.out.println("Paddle n° 5");
+
 
                 break;
             case 3:
                 twoBalls = true;
-                System.out.println("Duas bolas");
+
 
                 break;
+            case 4:
+
+                paddle.initPaddle(gerador.nextInt(2)+1);
 
             default:
                 break;
