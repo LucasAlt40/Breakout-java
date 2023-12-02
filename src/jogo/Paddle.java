@@ -12,7 +12,7 @@ public class Paddle extends Sprite {
     }
     // Tem que ser chamado o init paddle passando I como argumento
     private void initPaddle() {
-        loadImage(1);
+        loadImage();
         getImageDimensions();
         resetState();
     }
@@ -53,13 +53,8 @@ public class Paddle extends Sprite {
         }
     }
 
-    public void loadImage(int i) {
-        if (i == 1) {
-            var ii = new ImageIcon("src/resources/paddle.png");
-        }else{
-            var ii = new ImageIcon("src/resources/testinho-2.png");
-
-        }
+    public void loadImage() {
+        var ii = new ImageIcon("src/resources/paddle.png");
         setImageObject(ii.getImage());
     }
 

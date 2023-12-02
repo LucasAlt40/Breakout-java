@@ -354,7 +354,7 @@ public class Board extends JPanel implements Commons {
 
                     bricks[i].setDestroyed(true);
                     blocosDestruidos++;
-                    
+                    aleatorio();
                 }
 
                 if (blocosDestruidos == 8) {
@@ -375,8 +375,8 @@ public class Board extends JPanel implements Commons {
 
     private void aleatorio(){
         if (gerador.nextInt(3) + 1 == 1) {
-                        gerarBuffs();
-                    }
+            gerarBuffs();
+        }
     }
 
     private void gerarBuffs() {
@@ -395,9 +395,6 @@ public class Board extends JPanel implements Commons {
                 twoBalls = true;
                 System.out.println("Duas bolas");
 
-                break;
-            case 4:
-                paddle.loadImage(gerador.nextInt(2)+1);
                 break;
 
             default:
