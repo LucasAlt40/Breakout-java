@@ -3,6 +3,7 @@ package jogo;
 public class ListaEncadeada<T> {
 
     private No<T> inicio;
+
     private No<T> ultimo;
     private int tamanho = 0;
 
@@ -19,6 +20,23 @@ public class ListaEncadeada<T> {
 
     public int getTamanho() {
         return this.tamanho;
+    }
+
+    public T getElemento(int index) {
+        if (index < 0 || index >= tamanho) {
+            throw new IndexOutOfBoundsException("Index " + index + " out of bounds");
+        }
+
+        No<T> current = inicio;
+        for (int i = 0; i < index; i++) {
+            current = current.getProximo();
+        }
+
+        return current.getElemento();
+    }
+
+    public No<T> getInicio() {
+        return inicio;
     }
 
     public void limpa() {
