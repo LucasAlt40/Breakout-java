@@ -12,7 +12,6 @@ public class Sprite {
     private Image imageObject;
 
 
-
     public int getPositionX() {
         return positionX;
     }

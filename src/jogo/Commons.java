@@ -12,14 +12,14 @@ public interface Commons {
     int INICIAR_PADDLE_X = LARGURA / 2;
     int INICIAR_PADDLE_Y = ALTURA - 45;
     int INICIAR_BOLA_X = LARGURA / 2;
-    int INICIAR_BOLA_Y = 355;    
+    int INICIAR_BOLA_Y = 355;
     int VELOCIDADEGERAL = 10;
-    
-   
+
+
     int VELOCIDADEMAXBOLA = 3;
     int PADDLEINICIAL = 1;
     int PADDLEMEDIO = 2;
     int N_DA_BOLA = 1;
-    
+
 
 }

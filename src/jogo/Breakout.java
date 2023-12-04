@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class Breakout extends JFrame {
 
-    private jogo.Menu menu;
+    private Menu menu;
     private Board board;
 
     public Breakout() {
@@ -27,11 +27,10 @@ public class Breakout extends JFrame {
     }
 
     public void startGame() {
-        // Inicia o jogo
-        board = new Board();
+        board = new Board(this);
 
         SwingUtilities.invokeLater(() -> {
-            remove(menu); // Remove o menu
+            remove(menu);
             add(board, BorderLayout.CENTER);
             revalidate();
             board.requestFocusInWindow();

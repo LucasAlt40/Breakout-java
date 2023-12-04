@@ -1,21 +1,32 @@
 package jogo;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.IOException;
 
 public class Menu extends JPanel implements KeyListener {
 
-    private boolean gameStarted = false;
     private JFrame frame;
+    private Image backgroundImage;
 
     public Menu(JFrame frame) {
         this.frame = frame;
         setFocusable(true);
-        setPreferredSize(new Dimension(Commons.LARGURA, Commons.ALTURA));
-        setBackground(Color.BLACK);
+        setPreferredSize(new Dimension(Commons.LARGURA, 655));
+        loadBackgroundImage();
         addKeyListener(this);
+    }
+
+    private void loadBackgroundImage() {
+        try {
+            backgroundImage = ImageIO.read(new File("src/resources/menu_background.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -23,23 +34,17 @@ public class Menu extends JPanel implements KeyListener {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        g2d.setColor(Color.WHITE);
-        g2d.setFont(new Font("Verdana", Font.BOLD, 24));
-        String message = "Pressione qualquer tecla para iniciar";
-        FontMetrics fontMetrics = g.getFontMetrics();
-        int stringWidth = fontMetrics.stringWidth(message);
-        g2d.drawString(message, (Commons.LARGURA - stringWidth) / 2, Commons.ALTURA / 2);
+        // Desenha o fundo
+        if (backgroundImage != null) {
+            g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
     }
 
-    public boolean isGameStarted() {
-        return gameStarted;
-    }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        gameStarted = true;
         frame.remove(this); // Remove o painel do menu do JFrame
-        ((Breakout)frame).startGame(); // Inicia o jogo
+        ((Breakout) frame).startGame(); // Inicia o jogo
     }
 
     // Implementações vazias para métodos de KeyListener não utilizados

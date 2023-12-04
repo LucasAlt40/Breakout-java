@@ -2,8 +2,7 @@ package jogo;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
-import javax.swing.JPanel;
-import javax.swing.Timer;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,42 +23,76 @@ public class Board extends JPanel implements Commons {
     private boolean inGame = true;
     private boolean twoBalls = false;
     private Image backgroundImage;
-    private Clip backgroundMusic;
+    private Musica backgroundMusica;
+    private Musica gameoverMusica;
+    private Musica victoryMusica;
     private Clip colisionAudio;
     private int velocidadeBolinha = 1;
     private int blocosDestruidos = 0;
+    private int pontos = 0;
     private Random gerador = new Random();
+    private JFrame frame;
 
-    public Board() {
+    public Board(JFrame frame) {
+        this.backgroundMusica = new Musica();
+        this.gameoverMusica = new Musica();
+        this.victoryMusica = new Musica();
+        this.frame = frame;
         initBoard();
         setFocusable(true);
         requestFocusInWindow();
+        carregaMusica("src/resources/musica.wav", this.backgroundMusica);
         loadBackgroundImage();
-        loadBackgroundMusic();
         loadAudioColision();
     }
 
-    private void loadGameOverMusic() {
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        var g2d = (Graphics2D) g;
+
+        if (backgroundImage != null) {
+            g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
+
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+        // Desenha a pontuação na tela
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(new Font("Verdana", Font.BOLD, 24));
+        String pontuacao = "Pontuação: " + pontos;
+        FontMetrics fontMetrics = g2d.getFontMetrics();
+        int larguraTexto = fontMetrics.stringWidth(pontuacao);
+        g2d.drawString(pontuacao, (Commons.LARGURA - larguraTexto) / 2, 40);
+
+        if (inGame) {
+            drawObjects(g2d);
+        } else {
+            gameFinished(g2d);
+        }
+
+        Toolkit.getDefaultToolkit().sync();
+    }
+
+    private void carregaMusica(String caminho, Musica musica) {
         try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("src/resources/gameover.wav"));
-            backgroundMusic = AudioSystem.getClip();
-            backgroundMusic.open(audioInputStream);
-            backgroundMusic.loop(0);
-            adjustBackgroundVolume(50.0f);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(caminho));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.loop(0);
+            ajustaVolume(clip, 50.0f);
+            musica.setMusica(clip);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
     }
 
-    private void loadVictoryMusic() {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("src/resources/victory.wav"));
-            backgroundMusic = AudioSystem.getClip();
-            backgroundMusic.open(audioInputStream);
-            backgroundMusic.loop(0); // Toca uma vez
-            adjustBackgroundVolume(50.0f); // Definindo o volume para 50%
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
+    private void ajustaVolume(Clip clip, float volume) {
+        if (clip != null && clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            float dB = (float) (Math.log(volume / 100.0) / Math.log(10.0) * 20.0);
+            gainControl.setValue(dB);
         }
     }
 
@@ -89,25 +122,6 @@ public class Board extends JPanel implements Commons {
         }
     }
 
-    private void adjustBackgroundVolume(float volume) {
-        if (backgroundMusic != null && backgroundMusic.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-            FloatControl gainControl = (FloatControl) backgroundMusic.getControl(FloatControl.Type.MASTER_GAIN);
-            float dB = (float) (Math.log(volume / 100.0) / Math.log(10.0) * 20.0);
-            gainControl.setValue(dB);
-        }
-    }
-
-    private void loadBackgroundMusic() {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("src/resources/musica.wav"));
-            backgroundMusic = AudioSystem.getClip();
-            backgroundMusic.open(audioInputStream);
-            backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY); // Reproduz a música em loop
-            adjustBackgroundVolume(30.0f); // Definindo o volume para 50%
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    }
 
     private void loadBackgroundImage() {
         try {
@@ -144,27 +158,6 @@ public class Board extends JPanel implements Commons {
         addKeyListener(new TAdapter());
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        var g2d = (Graphics2D) g;
-
-        if (backgroundImage != null) {
-            g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-        }
-
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-
-        if (inGame) {
-            drawObjects(g2d);
-        } else {
-            gameFinished(g2d);
-        }
-
-        Toolkit.getDefaultToolkit().sync();
-    }
-
     private void drawObjects(Graphics2D g2d) {
 
         g2d.drawImage(ball.getImageObject(), ball.getPositionX(), ball.getPositionY(),
@@ -196,16 +189,15 @@ public class Board extends JPanel implements Commons {
         g2d.setFont(font);
         g2d.drawString(message, (Commons.LARGURA - fontMetrics.stringWidth(message)) / 2, Commons.ALTURA - 200);
         if (message.equals("Game Over")) {
-            if (backgroundMusic != null) {
-                backgroundMusic.stop();
+            if (backgroundMusica != null) {
+                backgroundMusica.getMusica().stop();
             }
-            loadGameOverMusic();
-
+            carregaMusica("src/resources/gameover.wav", gameoverMusica);
         } else {
-            if (backgroundMusic != null) {
-                backgroundMusic.stop();
+            if (backgroundMusica != null) {
+                backgroundMusica.getMusica().stop();
             }
-            loadVictoryMusic();
+            carregaMusica("src/resources/victory.wav", victoryMusica);
 
         }
     }
@@ -219,6 +211,11 @@ public class Board extends JPanel implements Commons {
         @Override
         public void keyPressed(KeyEvent e) {
             paddle.keyPressed(e);
+            if (!inGame) {
+                // Volta ao menu quando qualquer tecla é pressionada
+                ((Breakout) frame).startGame();
+            }
+
         }
     }
 
@@ -252,18 +249,16 @@ public class Board extends JPanel implements Commons {
             inGame = false;
             timer.stop();
             message = "Game Over";
-            if (backgroundMusic != null) {
-                backgroundMusic.stop();
+            if (backgroundMusica.getMusica() != null) {
+                backgroundMusica.getMusica().stop();
             }
-            loadGameOverMusic();
+            carregaMusica("src/resources/gameover.wav", gameoverMusica);
         }
 
         for (int i = 0, j = 0; i < N_DE_BLOCOS; i++) {
 
             if (bricks[i].isDestroyed()) {
-
                 j++;
-
             }
 
             if (j == N_DE_BLOCOS) {
@@ -335,6 +330,7 @@ public class Board extends JPanel implements Commons {
 
                 if (!bricks[i].isDestroyed()) {
                     playAudioColision();
+                    pontos += 10;
 
                     if (bricks[i].getRect().contains(pointRight)) {
 
@@ -373,34 +369,25 @@ public class Board extends JPanel implements Commons {
 
     }
 
-    private void aleatorio(){
+    private void aleatorio() {
         if (gerador.nextInt(3) + 1 == 1) {
             gerarBuffs();
         }
     }
 
     private void gerarBuffs() {
-
-
         switch (gerador.nextInt(4) + 1) {
             case 1:
                 paddle.setVelocidadePaddle(10);
-
                 break;
             case 2:
                 paddle.setVelocidadePaddle(5);
-
-
                 break;
             case 3:
                 twoBalls = true;
-
-
                 break;
             case 4:
-
-                paddle.initPaddle(gerador.nextInt(2)+1);
-
+                paddle.initPaddle(gerador.nextInt(2) + 1);
             default:
                 break;
         }
