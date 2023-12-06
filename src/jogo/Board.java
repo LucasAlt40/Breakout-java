@@ -12,27 +12,61 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
+/**
+ * A classe `Board` representa o painel principal do jogo Breakout, que estende
+ * `JPanel`.
+ * É responsável por gerenciar a lógica do jogo, desenhar objetos na tela e
+ * lidar com eventos do teclado.
+ */
 public class Board extends JPanel implements Commons {
 
+    // Timer para controlar o ciclo do jogo
     private Timer timer;
+
+    // Mensagem exibida ao final do jogo
     private String message = "Game Over";
+
+    // Objetos do jogo
     private Ball ball;
     private Ball ball2;
     private Paddle paddle;
+
+    // Estado do jogo
     private boolean inGame = true;
+
+    // Indica se há duas bolas em jogo
     private boolean twoBalls = false;
+
+    // Imagem de fundo
     private Image backgroundImage;
+
+    // Objetos de áudio
     private Musica backgroundMusica;
     private Musica gameoverMusica;
     private Musica victoryMusica;
     private Clip colisionAudio;
+
+    // Velocidade inicial da bola
     private int velocidadeBolinha = 1;
+
+    // Contadores de jogo
     private int blocosDestruidos = 0;
     private int pontos = 0;
-    private Random gerador = new Random();
-    private ListaEncadeada<Brick> bricksList;
+    // Referência ao JFrame principal
     private JFrame frame;
 
+    
+    // Gerador de números aleatórios
+    private Random gerador = new Random();
+
+    // Lista encadeada de tijolos
+    private ListaEncadeada<Brick> bricksList;
+
+    /**
+     * Construtor da classe `Board`. Inicializa objetos e configurações do jogo.
+     *
+     * @param frame Referência ao JFrame principal
+     */
     public Board(JFrame frame) {
         this.backgroundMusica = new Musica();
         this.gameoverMusica = new Musica();
@@ -75,6 +109,12 @@ public class Board extends JPanel implements Commons {
         Toolkit.getDefaultToolkit().sync();
     }
 
+    /**
+     * Carrega um arquivo de áudio e configura a música associada.
+     *
+     * @param caminho Caminho do arquivo de áudio
+     * @param musica  Objeto Musica para armazenar o Clip de áudio
+     */
     private void carregaMusica(String caminho, Musica musica) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(caminho));
@@ -88,6 +128,12 @@ public class Board extends JPanel implements Commons {
         }
     }
 
+    /**
+     * Ajusta o volume do Clip de áudio.
+     *
+     * @param clip   Clip de áudio
+     * @param volume Volume desejado (0 a 100)
+     */
     private void ajustaVolume(Clip clip, float volume) {
         if (clip != null && clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -96,6 +142,11 @@ public class Board extends JPanel implements Commons {
         }
     }
 
+    /**
+     * Ajusta o volume do áudio de colisão.
+     *
+     * @param volume Volume desejado (0 a 100)
+     */
     private void adjustCollisionVolume(float volume) {
         if (colisionAudio != null && colisionAudio.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             FloatControl gainControl = (FloatControl) colisionAudio.getControl(FloatControl.Type.MASTER_GAIN);
@@ -104,6 +155,9 @@ public class Board extends JPanel implements Commons {
         }
     }
 
+    /**
+     * Carrega o áudio de colisão do arquivo.
+     */
     private void loadAudioColision() {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("src/resources/colisao.wav"));
@@ -115,6 +169,9 @@ public class Board extends JPanel implements Commons {
         }
     }
 
+    /**
+     * Reproduz o áudio de colisão.
+     */
     private void playAudioColision() {
         if (colisionAudio != null) {
             colisionAudio.setFramePosition(0); // Reinicia o áudio para o início
@@ -122,7 +179,9 @@ public class Board extends JPanel implements Commons {
         }
     }
 
-
+    /**
+     * Carrega a imagem de fundo do arquivo.
+     */
     private void loadBackgroundImage() {
         try {
             backgroundImage = ImageIO.read(new File("src/resources/background.png"));
@@ -131,6 +190,9 @@ public class Board extends JPanel implements Commons {
         }
     }
 
+    /**
+     * Inicializa objetos e configurações do jogo.
+     */
     private void initBoard() {
         bricksList = new ListaEncadeada<>();
         ball = new Ball(N_DA_BOLA);
@@ -153,27 +215,41 @@ public class Board extends JPanel implements Commons {
         addKeyListener(new TAdapter());
     }
 
+    /**
+     * Desenha os objetos do jogo na tela.
+     *
+     * @param g2d Contexto gráfico 2D
+     */
     private void drawObjects(Graphics2D g2d) {
 
-        g2d.drawImage(ball.getImageObject(), ball.getPositionX(), ball.getPositionY(), ball.getImageWidth(), ball.getImageHeight(), this);
-        // Representação visual da bola 2
+        g2d.drawImage(ball.getImageObject(), ball.getPositionX(), ball.getPositionY(), ball.getImageWidth(),
+                ball.getImageHeight(), this);
+
         if (twoBalls) {
-            g2d.drawImage(ball2.getImageObject(), ball2.getPositionX(), ball2.getPositionY(), ball2.getImageWidth(), ball2.getImageHeight(), this);
+            g2d.drawImage(ball2.getImageObject(), ball2.getPositionX(), ball2.getPositionY(), ball2.getImageWidth(),
+                    ball2.getImageHeight(), this);
 
         }
 
-        g2d.drawImage(paddle.getImageObject(), paddle.getPositionX(), paddle.getPositionY(), paddle.getImageWidth(), paddle.getImageHeight(), this);
+        g2d.drawImage(paddle.getImageObject(), paddle.getPositionX(), paddle.getPositionY(), paddle.getImageWidth(),
+                paddle.getImageHeight(), this);
 
         No<Brick> currentBrick = bricksList.getInicio();
         while (currentBrick != null) {
             Brick current = currentBrick.getElemento();
             if (!current.isDestroyed()) {
-                g2d.drawImage(current.getImageObject(), current.getPositionX(), current.getPositionY(), current.getImageWidth(), current.getImageHeight(), this);
+                g2d.drawImage(current.getImageObject(), current.getPositionX(), current.getPositionY(),
+                        current.getImageWidth(), current.getImageHeight(), this);
             }
             currentBrick = currentBrick.getProximo();
         }
     }
 
+    /**
+     * Exibe a mensagem de fim de jogo na tela.
+     *
+     * @param g2d Contexto gráfico 2D
+     */
     private void gameFinished(Graphics2D g2d) {
         var font = new Font("Verdana", Font.BOLD, 42);
         FontMetrics fontMetrics = this.getFontMetrics(font);
@@ -195,6 +271,9 @@ public class Board extends JPanel implements Commons {
         }
     }
 
+    /**
+     * Manipulador de eventos de teclado.
+     */
     private class TAdapter extends KeyAdapter {
         @Override
         public void keyReleased(KeyEvent e) {
@@ -211,6 +290,9 @@ public class Board extends JPanel implements Commons {
         }
     }
 
+    /**
+     * Ciclo principal do jogo, controlado pelo Timer.
+     */
     private class GameCycle implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -218,6 +300,9 @@ public class Board extends JPanel implements Commons {
         }
     }
 
+    /**
+     * Executa o ciclo do jogo, atualizando a posição dos objetos.
+     */
     private void doGameCycle() {
         ball.move();
         paddle.move();
@@ -229,13 +314,21 @@ public class Board extends JPanel implements Commons {
         repaint();
     }
 
+    /**
+     * Encerra o jogo.
+     */
     private void stopGame() {
         inGame = false;
         timer.stop();
     }
 
+    /**
+     * Verifica as colisões e atualiza o estado do jogo.
+     *
+     * @param ball Bola para verificar colisões
+     */
     private void checkCollision(Ball ball) {
-        if (ball.getRect().getMaxY() > BORDA_INFERIOR) {
+        if (this.ball.getRect().getMaxY() > BORDA_INFERIOR) {
             inGame = false;
             timer.stop();
             message = "Game Over";
@@ -306,7 +399,8 @@ public class Board extends JPanel implements Commons {
 
         for (int i = 0; i < bricksList.getTamanho(); i++) {
             Brick currentBrick = bricksList.getElemento(i);
-            if (currentBrick != null && !currentBrick.isDestroyed() && ball.getRect().intersects(currentBrick.getRect())) {
+            if (currentBrick != null && !currentBrick.isDestroyed()
+                    && ball.getRect().intersects(currentBrick.getRect())) {
                 int ballLeft = (int) ball.getRect().getMinX();
                 int ballHeight = (int) ball.getRect().getHeight();
                 int ballWidth = (int) ball.getRect().getWidth();
@@ -337,7 +431,7 @@ public class Board extends JPanel implements Commons {
                     blocosDestruidos++;
                     aleatorio();
 
-                    if (blocosDestruidos == 8) {
+                    if (blocosDestruidos == 4) {
                         if (velocidadeBolinha < VELOCIDADEMAXBOLA) {
                             velocidadeBolinha++;
                         }
@@ -349,12 +443,18 @@ public class Board extends JPanel implements Commons {
         }
     }
 
+    /**
+     * Gera efeitos aleatórios no jogo, como buffs.
+     */
     private void aleatorio() {
         if (gerador.nextInt(3) + 1 == 1) {
             gerarBuffs();
         }
     }
 
+    /**
+     * Gera buffs aleatórios com base em um número aleatório.
+     */
     private void gerarBuffs() {
         switch (gerador.nextInt(4) + 1) {
             case 1:
